@@ -9,11 +9,9 @@ module MidtermProject(
     input ld,
     output [3:0] Q
     );
-    
-    int i;
     always @ (posedge clk)
     
-    Lab5_RCA R0 (.A[0](X[0]), );
+    
     if (!sel[0] && !sel[1])
         begin
         end

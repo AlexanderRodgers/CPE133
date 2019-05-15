@@ -4,7 +4,7 @@ module Decoder2x4(
     input I0,
     input I1,
     input cn,
-    output [3:0] D
+    output [3:0] D 
     );
     wire s0, s1, s2, s3, I0_br, I1_br;
     not(I0_br, I0);
