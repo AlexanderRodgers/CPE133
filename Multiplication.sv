@@ -6,6 +6,7 @@ module Multiplication(
     );
     
     wire k1, k2, j1, j2, j3, j4, i1, i2, i3, i4, i5, i6;
+    wire F0_bar, F1_bar, F2_bar, F3_bar;
     not N0 (F0_bar, F[0]);
     not N1 (F1_bar, F[1]);
     not N2 (F2_bar, F[2]);

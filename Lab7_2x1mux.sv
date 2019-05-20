@@ -6,13 +6,13 @@ module Lab7_2x1mux(
     input Sel,
     output Y
     );
-    wire s0, s1, s2, sel_bar;
+    wire s0, s1, s2, Sel_bar, A_bar, B_bar;
     not (A_bar, A);
     not (B_bar, B);
     not (Sel_bar, Sel);
-    and A1 (s0, A, B);
-    and A2 (s1, A, B_bar, Sel_bar);
-    and A3 (s2, B, sel);
+    and A1 (s0, A, B_bar, Sel_bar);
+    and A2 (s1, B, Sel);
+    and A3 (s2, A, B);
     or O1 (Y, s0, s1, s2);
  
 endmodule
