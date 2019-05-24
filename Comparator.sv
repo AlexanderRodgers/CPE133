@@ -1,10 +1,13 @@
 `timescale 1ns / 1ps
 
+// This comparator was created from a truth table generated for this project.
+// the temp = temperature
+
 module Comparator(
     input [3:0] temp,
-    output a, //lt
-    output b, //et
-    output c //gt
+    output a, 
+    output b,
+    output c
     );
     
     wire t0_bar, t1_bar, t2_bar, t3_bar;
@@ -19,7 +22,7 @@ module Comparator(
     and (g1, temp[3], temp[2], temp[0]);
     or (c, g0, g1);
     
-    wire ltw;
-    or (ltw, et, gt);
-    not (a, ltw);
+    wire d;
+    or (d, b, c);
+    not (a, d);
 endmodule

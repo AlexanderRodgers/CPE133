@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+// Generated from a truth table.
+
 module Multiplication(
     input [3:0] F,
     output [3:0] Q

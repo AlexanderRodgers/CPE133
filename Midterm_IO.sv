@@ -1,53 +1,32 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 05/19/2019 03:31:13 PM
-// Design Name: 
-// Module Name: Mux_4x1Midterm
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
-/* 
-module Lab7_4x1mux(
-    input [3:0] X, input sel_1, input sel_2,
-    output Y
-);
-wire J0, J1;
-
-Lab7_2x1mux m1 (.Y(J0), .A(X[0]), .B(X[1]), .Sel(sel_1));
-Lab7_2x1mux m2 (.Y(J1), .A(X[2]), .B(X[3]), .Sel(sel_1));
-
-Lab7_2x1mux m3 (.Y(Y), .A(J0), .B(J1), .Sel(sel_2));
-endmodule
-*/
 
 module Midterm_IO(
-    input A,
-    input B,
-    input C,
-    input D,
-    input sel_1,
-    input sel_2,
-    output Y
-    );
+    input [3:0] temp,
+    input [1:0] sys_meas,
+    input clr,
+    input clk,
+    input id,
+    input st,
+    output [3:0] D_out,
+    output [1:0] T_out,
+    output clr_out,
+    output ld_out,
+    output st_out);
     
-    wire J0, J1;
+//    input [3:0] D,
+//    input clr,
+//    input clk,
+//    input st,
+//    input Id,
+//    output [3:0] Q,
+//    output [3:0] Q_bar
     
-    Lab7_2x1mux m1 (.Y(J0), .A(A), .B(B), .Sel(sel_1));
-    Lab7_2x1mux m2 (.Y(J1), .A(C), .B(D), .Sel(sel_1));
-    Lab7_2x1mux m3 (.Y(Y), .A(J0), .B(J1), .Sel(sel_2));
-    
+    FlipFlop_4Bit ff0 (.D(temp), .clr(clr), .clk(clk), .st(st), .Id(id), .Q(D_out));
+
+    FF_Dcom Fd0 (.D(sys_meas[0]), .clk(clk), .clr(clr), .St(st), .Id(id), .Q(T_out[0]));
+    FF_Dcom Fd1 (.D(sys_meas[1]), .clk(clk), .clr(clr), .St(st), .Id(id), .Q(T_out[1]));
+
+    FF_Dcom Fd2 (.D(clr), .clk(clk), .clr(clr), .St(st), .Id(id), .Q(clr_out));
+    FF_Dcom Fd3 (.D(id), .clk(clk), .clr(clr), .St(st), .Id(id), .Q(ld_out));
+    FF_Dcom Fd4 (.D(st), .clk(clk), .clr(clr), .St(st), .Id(id), .Q(st_out));    
 endmodule
