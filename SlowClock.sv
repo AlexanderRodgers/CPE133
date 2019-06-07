@@ -4,7 +4,7 @@ module SlowClock(
     input clk,
     reg cnt
     );
-    parameter N = 28;
+    parameter N = 4;
     
     // usually want a number around 28 but it makes the component hard to simulate.
     
