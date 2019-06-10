@@ -43,7 +43,7 @@ module state_strct_slow_clock(clk, reset,x,Q,Qb, Z1,Z2);
         input logic x;
         output logic Z1,Z2;
         output logic  [1:0]Q,Qb;
-       wire j0,k0,k1, j1;
+       wire j0,k0,k1,j1;
         
         assign  j0 = ~x  &  Q[1];
         assign  k0 = ~x  &  Q[1];
@@ -52,7 +52,7 @@ module state_strct_slow_clock(clk, reset,x,Q,Qb, Z1,Z2);
         
         wire slow_clock;
         
-        SlowClock s_clock (.clk(clk), .cnt(slow_clock));
+        NewClock s_clock (.clk(clk), .cnt(slow_clock));
         
        JK_FF JKF0 (.clk(slow_clock), .JK({j0,k0}),.clr(reset), .Q(Q[0]),
         .Qb(Qb[0]));
