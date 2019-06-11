@@ -23,7 +23,7 @@ module NewClock(
     clk,
     cnt
     );
-    parameter N = 4;
+    parameter N = 28;
     
     input clk;
     output cnt;
