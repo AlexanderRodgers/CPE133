@@ -19,7 +19,7 @@ assign analog_neg_in = JA[0];
 
 wire [15:0] do_out;  // ADC value; useful part are only [15:4] bits
 
-wire [4 : 0] channel_out;
+wire [4:0] channel_out;
 assign led[4:0] = channel_out;
 
 wire eoc_out;
@@ -63,6 +63,5 @@ assign value_in =  do_out[15:4];
 HexDisplayV2 MyHexDisplay(
     clk,          //the system clock running at least 25 MHz
  value_in,  //the 16 bit binary value to be displayed
- sw[15],      //if HI converts binary value into decimal value, else displays HEX
  1, seg, an );
 endmodule
