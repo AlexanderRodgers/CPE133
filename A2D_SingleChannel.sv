@@ -9,7 +9,6 @@ module MyA2D_SingleChannel_05_ContinousMode(
     output[15:0] led,
     input [7:0] JA
     );
-   
 
 // ADC channel to be used h5 means AUXPOS: JA[4] AUXNEG: JA[0]  IMPORTANT READ BELOW
 // NOTE: if you change XADC channel, you must also change the corresponding port asignments below!!!!!!! 
@@ -55,14 +54,52 @@ xadc_wiz_0 CoolADCd (
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-
-// Setup Hex Display
-wire [15:0] value_in;
-assign value_in =  do_out[15:4];
-
-HexDisplayV2 MyHexDisplay(
-    clk,          //the system clock running at least 25 MHz
- value_in,  //the 16 bit binary value to be displayed
- sw[15],      //if HI converts binary value into decimal value, else displays HEX
- 1, seg, an );
+logic [11:0] value_in;
+ always @ (posedge clk)
+        begin
+        value_in = do_out [15:4]; //other its are junk
+        end
+    logic [11:0] celsius;
+    logic [11:0] farenheit;
+    
+    always_comb //conversion math
+    begin
+    celsius = (((value_in*(212/100))/5)-500)/(10);
+    farenheit = ((celsius * 9) / 5) + 32;
+    end
+    
+    wire [1:0] sel;
+    assign sel = {sw[1], sw[0]};
+    reg [15:0] seg_out;
+    reg hex_bcd;
+    reg ending;
+    
+    always @ (posedge clk)
+        begin
+        if (sel == 2'b00)
+        begin
+            seg_out = {celsius[11], celsius[10], celsius[9], celsius[8], celsius[7], celsius[6],
+                celsius[5], celsius[4], celsius[3], celsius[2], celsius[1], celsius[0]};
+            hex_bcd = 1'b0;
+            ending = 1'b1;
+        end
+        else if (sel == 2'b01)
+        begin
+            seg_out = {farenheit[11], farenheit[10], farenheit[9], farenheit[8], farenheit[7], farenheit[6],
+                farenheit[5], farenheit[4], farenheit[3], farenheit[2], farenheit[1], farenheit[0]};
+            hex_bcd = 1'b0;
+            ending = 1'b1;
+        end
+        else if (sel == 2'b10)
+        begin
+            seg_out = value_in;
+            hex_bcd = 1'b0;
+            ending = 1'b0;
+        end
+        else
+            seg_out = 16'b1110111011101110;
+            hex_bcd = 1'b0;
+            ending = 1'b0;
+        end
+    Seven_Seg disp (.clk(clk), .hex_bcd(hex_bcd), .seg(seg), .an(an), .inpt_x(seg_out));
 endmodule
