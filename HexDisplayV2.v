@@ -31,6 +31,7 @@
 		input BCD_enable,	     //if HI converts binary value into decimal value, else displays HEX
 		input temp_c,
 		input temp_f,
+		input std_volt,
 		input Display_Enable,    //if HI display is enabled, LO turns it off.	
 		output [6:0] seg,	     //each bit corresponds to one of the 7 segments on the display
 		output [3:0] an	         //specifies which of the 4 displays is to be turned on (temporarily)
@@ -47,10 +48,7 @@
 			
 		wire [1:0] digit_select; //
 		assign digit_select = clk_div[CLKBIT:CLKBIT-1]; //use two MSB to select digits
-		
-		wire [15:0] celsius, farenheit;
-		FinalProject fp (.clk(clk), .val_in(value_in), .f(farenheit), .c(celsius));
-		
+
 		wire [15:0] BCD_out;
 		Hex2BCD MyHex2BCD(clk, value_in, BCD_out, busy);
 			
@@ -59,6 +57,7 @@
 		assign value_used = BCD_enable ? BCD_out : 
 		                    temp_c ? celsius :
 		                    temp_f ? farenheit :
+		                    std_volt ? voltg :
 		                    value_in;
 		
 		//now multiplex, i.e., send alternate 4 bits of the input value to the display

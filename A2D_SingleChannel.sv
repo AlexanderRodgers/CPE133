@@ -55,16 +55,47 @@ xadc_wiz_0 CoolADCd (
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-
-// Setup Hex Display
-wire [15:0] value_in;
-assign value_in =  do_out[15:4];
+logic [11:0] value_in;
+ always @ (posedge clk)
+        begin
+        value_in = do_out [15:4]; //other its are junk
+        end
+    logic [11:0] celsius;
+    logic [11:0] farenheit;
+    
+    always_comb //conversion math
+    begin
+    celsius = (((value_in*(212/100))/5)-500)/(10);
+    farenheit = ((celsius * 9) / 5) + 32;
+    end
+    
+    wire [1:0] sel;
+    assign sel = {sw[1], sw[0]};
+    reg [15:0] seg_out;
+    reg hex_bcd;
+    reg ending;
+    
+    always @ (posedge clk)
+        begin
+        if (sel == 2'b01)
+            begin
+            assign seg_out = celsius;
+            end
+        if(sel == 2'b10)
+            begin
+            assign seg_out = farenheit;
+            end
+        else
+            begin
+            assign seg_out = do_out;
+            end            
 
 HexDisplayV2 MyHexDisplay(
     clk,          //the system clock running at least 25 MHz
  value_in,  //the 16 bit binary value to be displayed
  sw[1],
  sw[2],
+ sw[3],
  sw[15],      //if HI converts binary value into decimal value, else displays HEX
  1, seg, an );
 endmodule
