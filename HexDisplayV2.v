@@ -29,9 +29,6 @@
 		input clk,				 //the system clock running at least 25 MHz
 		input [15:0] value_in,	 //the 16 bit binary value to be displayed
 		input BCD_enable,	     //if HI converts binary value into decimal value, else displays HEX
-		input temp_c,
-		input temp_f,
-		input std_volt,
 		input Display_Enable,    //if HI display is enabled, LO turns it off.	
 		output [6:0] seg,	     //each bit corresponds to one of the 7 segments on the display
 		output [3:0] an	         //specifies which of the 4 displays is to be turned on (temporarily)
@@ -54,11 +51,7 @@
 			
 		wire[15:0] value_used;
 		
-		assign value_used = BCD_enable ? BCD_out : 
-		                    temp_c ? celsius :
-		                    temp_f ? farenheit :
-		                    std_volt ? voltg :
-		                    value_in;
+		assign value_used = BCD_enable ? BCD_out : value_in;
 		
 		//now multiplex, i.e., send alternate 4 bits of the input value to the display
 		wire [3:0] tmp_value;	

@@ -9,7 +9,6 @@ module MyA2D_SingleChannel_05_ContinousMode(
     output[15:0] led,
     input [7:0] JA
     );
-   
 
 // ADC channel to be used h5 means AUXPOS: JA[4] AUXNEG: JA[0]  IMPORTANT READ BELOW
 // NOTE: if you change XADC channel, you must also change the corresponding port asignments below!!!!!!! 
@@ -77,25 +76,30 @@ logic [11:0] value_in;
     
     always @ (posedge clk)
         begin
-        if (sel == 2'b01)
-            begin
-            assign seg_out = celsius;
-            end
-        if(sel == 2'b10)
-            begin
-            assign seg_out = farenheit;
-            end
+        if (sel == 2'b00)
+        begin
+            seg_out = {celsius[11], celsius[10], celsius[9], celsius[8], celsius[7], celsius[6],
+                celsius[5], celsius[4], celsius[3], celsius[2], celsius[1], celsius[0]};
+            hex_bcd = 1'b0;
+            ending = 1'b1;
+        end
+        else if (sel == 2'b01)
+        begin
+            seg_out = {farenheit[11], farenheit[10], farenheit[9], farenheit[8], farenheit[7], farenheit[6],
+                farenheit[5], farenheit[4], farenheit[3], farenheit[2], farenheit[1], farenheit[0]};
+            hex_bcd = 1'b0;
+            ending = 1'b1;
+        end
+        else if (sel == 2'b10)
+        begin
+            seg_out = value_in;
+            hex_bcd = 1'b0;
+            ending = 1'b0;
+        end
         else
-            begin
-            assign seg_out = do_out;
-            end            
-
-HexDisplayV2 MyHexDisplay(
-    clk,          //the system clock running at least 25 MHz
- value_in,  //the 16 bit binary value to be displayed
- sw[1],
- sw[2],
- sw[3],
- sw[15],      //if HI converts binary value into decimal value, else displays HEX
- 1, seg, an );
+            seg_out = 16'b1110111011101110;
+            hex_bcd = 1'b0;
+            ending = 1'b0;
+        end
+    Seven_Seg disp (.clk(clk), .hex_bcd(hex_bcd), .seg(seg), .an(an), .inpt_x(seg_out));
 endmodule
