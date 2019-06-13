@@ -63,6 +63,8 @@ assign value_in =  do_out[15:4];
 HexDisplayV2 MyHexDisplay(
     clk,          //the system clock running at least 25 MHz
  value_in,  //the 16 bit binary value to be displayed
+ sw[1],
+ sw[2],
  sw[15],      //if HI converts binary value into decimal value, else displays HEX
  1, seg, an );
 endmodule

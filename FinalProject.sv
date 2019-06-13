@@ -18,10 +18,10 @@ module FinalProject(
     always @ (posedge clk)
     begin
         x = val_in;
-        voltage = (x * 5) / 1024;
-        celsius = (voltage - 0.5) * 100;
-        farenheit = (celsius * 9.0 / 5.0) + 32;
-        assign f = farenheit;
-        assign c = celsius;
+        voltage = (x * 3) / 1024;
+        celsius = (voltage) * 100;
+        farenheit = (celsius * 9 / 5) + 32;
+        f = farenheit;
+        c = celsius;
     end
 endmodule

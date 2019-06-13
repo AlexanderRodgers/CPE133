@@ -29,6 +29,8 @@
 		input clk,				 //the system clock running at least 25 MHz
 		input [15:0] value_in,	 //the 16 bit binary value to be displayed
 		input BCD_enable,	     //if HI converts binary value into decimal value, else displays HEX
+		input temp_c,
+		input temp_f,
 		input Display_Enable,    //if HI display is enabled, LO turns it off.	
 		output [6:0] seg,	     //each bit corresponds to one of the 7 segments on the display
 		output [3:0] an	         //specifies which of the 4 displays is to be turned on (temporarily)
@@ -46,15 +48,22 @@
 		wire [1:0] digit_select; //
 		assign digit_select = clk_div[CLKBIT:CLKBIT-1]; //use two MSB to select digits
 		
+		wire [15:0] celsius, farenheit;
+		FinalProject fp (.clk(clk), .val_in(value_in), .f(farenheit), .c(celsius));
+		
 		wire [15:0] BCD_out;
 		Hex2BCD MyHex2BCD(clk, value_in, BCD_out, busy);
 			
 		wire[15:0] value_used;
-		assign value_used = BCD_enable ? BCD_out : value_in;
+		
+		assign value_used = BCD_enable ? BCD_out : 
+		                    temp_c ? celsius :
+		                    temp_f ? farenheit :
+		                    value_in;
 		
 		//now multiplex, i.e., send alternate 4 bits of the input value to the display
 		wire [3:0] tmp_value;	
-		assign tmp_value = (digit_select ==  2'b00 ) ? value_used[3:0]:
+		assign tmp_value = (digit_select == 2'b00 ) ? value_used[3:0]:
 								(digit_select ==  2'b01 ) ? value_used[7:4]:
 								(digit_select ==  2'b10 ) ? value_used[11:8]:
 								(digit_select ==  2'b11 ) ? value_used[15:12]:
